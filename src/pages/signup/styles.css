@@ -1,0 +1,15 @@
+.signup-form {
+  border: 1px solid black;
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input, button {
+  padding: 8px 16px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 8px;
+}
