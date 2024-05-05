@@ -1,88 +1,32 @@
-import * as React from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import { openModal } from "@features/modal";
+import styled from "styled-components";
+import Heading from "@components/shared/heading";
+import Text from "@components/shared/text";
+import Button from "@components/shared/button";
+import { NavLink } from "react-router-dom";
+
+const Nav = styled.nav`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 70px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+`;
 
 export default function Navbar() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  }
-
-  const handleLogOut = () => {
-    localStorage.removeItem("userKey");
-    localStorage.removeItem("userSecret");
-  };
 
   return (
-    <Box>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Home
-          </Typography>
-
-          <div>
-            <button onClick={() => dispatch(openModal())}>
-              Add New Book
-            </button>
-
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={() => navigate("/")}>Profile</MenuItem>
-              <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
-            </Menu>
-          </div>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <Nav>
+      <NavLink to={"/"} style={{ textDecoration: "none" }}>
+        <Heading fs="24px" height="1">
+          BookShelf
+        </Heading>
+      </NavLink>
+      <Button onClick={() => dispatch(openModal())}>
+        <Text color="#fff">Create New Book</Text>
+      </Button>
+    </Nav>
   );
 }

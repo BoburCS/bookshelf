@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import createSign from "../../lib/createSign";
+import { useSignupMutation } from "@services/api";
+import Input from "@components/shared/input";
+import Button from "@components/shared/button";
+import Heading from "@components/shared/heading";
+import { Label, Div } from "@components/Modal";
 
 const SignupContainer = styled.div`
   width: 100%;
@@ -8,10 +12,22 @@ const SignupContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #f5f5f5;
+`;
+
+const Form = styled.form`
+  padding: 2rem;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #fff;
+  border-radius: 16px;
 `;
 
 export default function Signup() {
   const navigate = useNavigate();
+  const [signup] = useSignupMutation();
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,50 +35,60 @@ export default function Signup() {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
 
-    const key = data.key as string;
-    localStorage.setItem("userKey", key);
-    const secret = data.secret as string;
-    localStorage.setItem("userSecret", secret);
-    const method = "POST";
-    const url = "/signup";
-    const body = JSON.stringify(data);
-
-    const sign = createSign(method, url, body, secret);
-
     try {
-      const response = await fetch(`https://no23.lavina.tech${url}`, {
-        method,
-        headers: {
-          Key: key,
-          Sign: sign,
-          "Content-Type": "application/json",
-        },
-        body,
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const responseData = await response.json();
-      console.log(responseData);
+      await signup(data).unwrap();
       navigate("/");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
   return (
     <SignupContainer>
-      <form onSubmit={handleSignup} className="signup-form">
-        <h1>Sign Up Form</h1>
-
-        <input name="name" type="text" placeholder="name" required />
-        <input name="email" type="email" placeholder="email" required />
-        <input name="key" type="text" placeholder="your secret key" required />
-        <input name="secret" type="text" placeholder="your secret" required />
-        <button>Sign Up</button>
-      </form>
+      <Form onSubmit={handleSignup} className="signup-form">
+        <Heading>Sign Up Form</Heading>
+        <Div>
+          <Label htmlFor="name">Name</Label>
+          <Input
+            name="name"
+            id="name"
+            type="text"
+            placeholder="name"
+            required
+          />
+        </Div>
+        <Div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            name="email"
+            id="email"
+            type="email"
+            placeholder="email"
+            required
+          />
+        </Div>
+        <Div>
+          <Label htmlFor="key">Key</Label>
+          <Input
+            name="key"
+            id="key"
+            type="text"
+            placeholder="your key"
+            required
+          />
+        </Div>
+        <Div>
+          <Label htmlFor="secret">Secret</Label>
+          <Input
+            name="secret"
+            id="secret"
+            type="text"
+            placeholder="your secret"
+            required
+          />
+        </Div>
+        <Button type="submit">Sign Up</Button>
+      </Form>
     </SignupContainer>
   );
 }
