@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
-import Navbar from "../components/Navbar";
+import Navbar from "@components/Navbar";
 
 const Main = styled.main`
   width: 100%;

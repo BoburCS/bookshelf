@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { Grid } from "@pages/home/Home";
 
 const SkeletonPulse = keyframes`
   0% {
@@ -17,4 +18,14 @@ const SkeletonCard = styled.div`
   animation: ${SkeletonPulse} 1.5s infinite ease-in-out;
 `;
 
-export default SkeletonCard;
+// Loading Skeleton for books container
+export default function Skeleton() {
+  return (
+    <Grid>
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+    </Grid>
+  );
+}

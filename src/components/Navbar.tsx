@@ -12,6 +12,10 @@ const Nav = styled.nav`
   justify-content: space-between;
   padding: 20px 70px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 12px 20px;
+  }
 `;
 
 export default function Navbar() {

@@ -14,6 +14,14 @@ const ButtonStyled = styled.button<ButtonStyledProps>`
   &:hover {
     background: #a78bfa;
   }
+
+  @media (max-width: 768px) {
+    padding: 6px 12px;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    padding: 8px 16px;
+  }
 `;
 
 export default function Button({ children, ...rest }: ButtonProps) {

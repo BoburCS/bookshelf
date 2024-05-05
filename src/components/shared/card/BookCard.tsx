@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useEditBookMutation, useDeleteBookMutation } from "@services/api";
 import { toast } from "react-toastify";
+import capitalize from "@lib/capitalize";
 import Heading from "../heading";
 import Text from "../text";
 import Button from "../button";
@@ -40,34 +41,38 @@ export default function BookCard({ book, status: initialStatus }: BookStatus) {
     useEditBook({ ...book, status: newStatus });
   };
 
-  if (editBookData) {
-    toast.success("Book status updated successfully");
-  }
+  React.useEffect(() => {
+    if (editBookData) {
+      toast.success("Book status updated successfully");
+    }
 
-  if (editBookError) {
-    toast.error("Failed to update book status");
-  }
+    if (editBookError) {
+      toast.error("Failed to update book status");
+    }
+  }, [editBookData, editBookError]);
 
   const handleDeleteBook = () => {
     useDeleteBook(book.id);
   }
 
-  if (deleteBookData) {
-    toast.success("Book deleted successfully");
-  }
+  React.useEffect(() => {
+    if (deleteBookData) {
+      toast.success("Book deleted successfully");
+    }
 
-  if (deleteBookError) {
-    toast.error("Failed to delete book");
-  }
+    if (deleteBookError) {
+      toast.error("Failed to delete book");
+    }
+  }, [deleteBookData, deleteBookError]);
 
   return (
     <Card>
       <img src={cover} alt={title} />
       <div style={{ display: "flex", flexDirection: "column" }}>
         <Heading fs="18px" height="1" margin="8px 0">
-          {title}
+          {capitalize(title)}
         </Heading>
-        <Text fs="14px">Author: {author}</Text>
+        <Text fs="14px">Author: {capitalize(author)}</Text>
         <Text fs="14px">{pages} pages</Text>
         <Text fs="14px">Published in {published}</Text>
         <Text fs="14px">

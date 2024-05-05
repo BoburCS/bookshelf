@@ -10,6 +10,15 @@ const HeadingStyled = styled.h1<TypographyStyledProps>`
   line-height: ${({ height }) => height || "2"};
   text-transform: ${({ transform }) => transform || "none"};
   text-decoration: ${({ decoration }) => decoration || "none"};
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+    height: 1.5;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    font-size: 1.5rem;
+  }
 `;
 
 export default function Heading({ children, ...rest }: TypographyProps) {

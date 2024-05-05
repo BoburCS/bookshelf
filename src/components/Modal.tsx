@@ -31,6 +31,11 @@ const ModalContent = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 768px) {
+    width: 90%;
+    padding: 16px;
+  }
 `;
 
 const Form = styled.form`
@@ -63,8 +68,7 @@ export default function Modal() {
     const data = Object.fromEntries(formData);
 
     try {
-      const response = await createBook(data).unwrap();
-      console.log(response);
+      await createBook(data).unwrap();
       toast.success("Book created successfully");
       dispatch(closeModal());
     } catch (error) {

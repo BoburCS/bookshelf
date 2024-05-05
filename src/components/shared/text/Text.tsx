@@ -10,6 +10,10 @@ const TextStyled = styled.p<TypographyStyledProps>`
   line-height: ${({ height }) => height || "1.5"};
   text-transform: ${({ transform }) => transform || "none"};
   text-decoration: ${({ decoration }) => decoration || "none"};
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+  }
 `;
 
 export default function Text({ children, ...rest }: TypographyProps) {
