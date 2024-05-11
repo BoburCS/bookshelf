@@ -2,6 +2,23 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { backendUrl } from "../constants";
 import createSign from "@lib/createSign";
 
+const createRequest = (method: string, url: string, body: string | null) => {
+  const key = localStorage.getItem("userKey") as string;
+  const secret = localStorage.getItem("userSecret") as string;
+  const sign = createSign(method, url, body || "", secret);
+
+  return {
+    url,
+    method,
+    headers: {
+      Key: key,
+      Sign: sign,
+      ...(body && { "Content-Type": "application/json" }),
+    },
+    ...(body && { body }),
+  };
+};
+
 export const apiService = createApi({
   reducerPath: "apiService",
   baseQuery: fetchBaseQuery({ baseUrl: backendUrl }),
@@ -9,106 +26,29 @@ export const apiService = createApi({
   endpoints: (builder) => ({
     signup: builder.mutation({
       query: (data) => {
-        const key = data.key;
-        localStorage.setItem("userKey", key);
-        const secret = data.secret;
-        localStorage.setItem("userSecret", secret);
-        const method = "POST";
-        const url = "/signup";
-        const body = JSON.stringify(data);
-
-        const sign = createSign(method, url, body, secret);
-
-        return {
-          url,
-          method,
-          headers: { Key: key, Sign: sign, "Content-Type": "application/json" },
-          body,
-        };
+        localStorage.setItem("userKey", data.key);
+        localStorage.setItem("userSecret", data.secret);
+        return createRequest("POST", "/signup", JSON.stringify(data));
       },
     }),
     getUserInfo: builder.query({
-      query: () => {
-        const key = localStorage.getItem("userKey") as string;
-        const secret = localStorage.getItem("userSecret") as string;
-        const method = "GET";
-        const url = "/myself";
-        const body = "";
-
-        const sign = createSign(method, url, body, secret);
-
-        return { url, method, headers: { Key: key, Sign: sign } };
-      },
+      query: () => createRequest("GET", "/myself", null),
     }),
     getBooks: builder.query({
-      query: () => {
-        const key = localStorage.getItem("userKey") as string;
-        const secret = localStorage.getItem("userSecret") as string;
-        const method = "GET";
-        const url = "/books";
-        const body = "";
-
-        const sign = createSign(method, url, body, secret);
-
-        return { url, method, headers: { Key: key, Sign: sign } };
-      },
+      query: () => createRequest("GET", "/books", null),
       providesTags: ["Books"],
     }),
     createBook: builder.mutation({
-      query: (book) => {
-        const key = localStorage.getItem("userKey") as string;
-        const secret = localStorage.getItem("userSecret") as string;
-        const method = "POST";
-        const url = "/books";
-        const body = JSON.stringify(book);
-
-        const sign = createSign(method, url, body, secret);
-
-        return {
-          url,
-          method,
-          headers: { Key: key, Sign: sign, "Content-Type": "application/json" },
-          body,
-        };
-      },
+      query: (book) => createRequest("POST", "/books", JSON.stringify(book)),
       invalidatesTags: ["Books"],
     }),
     editBook: builder.mutation({
-      query: (book) => {
-        const key = localStorage.getItem("userKey") as string;
-        const secret = localStorage.getItem("userSecret") as string;
-        const method = "PATCH";
-        const url = `/books/${book.id}`;
-        const body = JSON.stringify(book);
-
-        const sign = createSign(method, url, body, secret);
-
-        return {
-          url,
-          method,
-          headers: { Key: key, Sign: sign, "Content-Type": "application/json" },
-          body,
-        };
-      },
+      query: (book) =>
+        createRequest("PATCH", `/books/${book.id}`, JSON.stringify(book)),
       invalidatesTags: ["Books"],
     }),
     deleteBook: builder.mutation({
-      query: (id) => {
-        const key = localStorage.getItem("userKey") as string;
-        const secret = localStorage.getItem("userSecret") as string;
-        const method = "DELETE";
-        const url = `/books/${id}`;
-        const body = "";
-
-        const sign = createSign(method, url, body, secret);
-
-        return {
-          url,
-          method,
-          headers: { Key: key, Sign: sign },
-          body,
-        };
-      },
+      query: (id) => createRequest("DELETE", `/books/${id}`, null),
       invalidatesTags: ["Books"],
     }),
   }),
@@ -120,5 +60,5 @@ export const {
   useGetBooksQuery,
   useCreateBookMutation,
   useEditBookMutation,
-  useDeleteBookMutation
+  useDeleteBookMutation,
 } = apiService;
